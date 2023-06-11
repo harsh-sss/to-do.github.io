@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Todo Application</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #A452E1;
+    }
+    .container {
+      margin-top: 50px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Todo List</h1>
+    <form id="todo-form">
+      <div class="form-group">
+        <label for="task">Task:</label>
+        <input type="text" class="form-control" id="task">
+      </div>
+      <button type="submit" class="btn btn-primary">Add Task</button>
+    </form>
+    <ul id="task-list" class="mt-4"></ul>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <script>
+    // Array to store the tasks
+    let tasks = [];
+
+    // Function to add a task
+    function addTask(event) {
+      event.preventDefault();
+
+      const taskInput = document.getElementById('task');
+      const task = taskInput.value.trim();
+
+      if (task !== '') {
+        tasks.push(task);
+        taskInput.value = '';
+        renderTasks();
+        Swal.fire('Success', 'Task added successfully!', 'success');
+      } else {
+        Swal.fire('Error', 'Please enter a task!', 'error');
+      }
+    }
+
+    // Function to delete a task
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      renderTasks();
+      Swal.fire('Success', 'Task deleted successfully!', 'success');
+    }
+
+    // Function to edit a task
+    function editTask(index) {
+      const updatedTask = prompt('Enter the updated task:');
+      if (updatedTask !== null && updatedTask.trim() !== '') {
+        tasks[index] = updatedTask.trim();
+        renderTasks();
+        Swal.fire('Success', 'Task updated successfully!', 'success');
+      } else {
+        Swal.fire('Error', 'Please enter a valid task!', 'error');
+      }
+    }
+
+    // Function to render the tasks on the page
+    function renderTasks() {
+      const taskList = document.getElementById('task-list');
+      taskList.innerHTML = '';
+
+      tasks.forEach((task, index) => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+          ${task}
+          <div class="d-inline-block ml-2">
+            <button class="btn btn-primary btn-sm" onclick="editTask(${index})">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="deleteTask(${index})">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        `;
+        taskList.appendChild(listItem);
+      });
+    }
+
+    // Event listener for the form submit event
+    const todoForm = document.getElementById('todo-form');
+    todoForm.addEventListener('submit', addTask);
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+</body>
+</html>
